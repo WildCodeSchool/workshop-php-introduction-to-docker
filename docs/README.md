@@ -65,6 +65,7 @@ Ouvre un terminal en racine de ton projet 3 et lance la commande :
 ```bash
 docker compose up -d
 ```
+Tu te rends compte que la construction est un peu plus longue que tout à l'heure.  
 Cette commande va construire les images, installer les outils et exécuter les commandes dont le projet a besoin à partir des fichiers `docker-compose.yml` et `Dockerfile`, à savoir :
 - installer un environnement php 8.2 avec composer et les extensions php appropriées et déjà configurées,
 - une image mysql,
@@ -72,8 +73,24 @@ Cette commande va construire les images, installer les outils et exécuter les c
 - lancer les commandes `composer install` et `yarn install`,
 - mettre à jour la BDD,
 - etc.
-  
-Tu te rends compte que la construction est un peu plus longue que tout à l'heure. Une fois terminée, deux conteneurs sont lancés et tu peux accéder au projet avec ton navigateur comme tu l'as fait précédemment à l'adresse [http://localhost:8000](http://localhost:8000).  
+
+> ⚠️
+Selon les OS ou les configurations des machines, il arrive que Docker retourne une erreur lors du montage de l'image MySQL indiquant le port `3306` est déjà utilisé.  
+Si c'est le cas, deux possibilités s'offrent à toi :
+- éteindre le service MySQL sur ta machine pour libérer le port 3306 ;
+- ou changer le port `3306` en `3307` par exemple dans le fichier `docker-compose.yml` comme ceci :
+  ```yaml
+  web:
+    environment:
+        DATABASE_URL: mysql://user:password@database:3307/symfony?serverVersion=8&charset=utf8mb4
+        //..
+  database:
+        ports:
+            - "3307:3306"
+  ```
+
+
+Une fois terminée, deux conteneurs sont lancés et tu peux accéder au projet avec ton navigateur comme tu l'as fait précédemment à l'adresse [http://localhost:8000](http://localhost:8000).  
 Attention, il faut parfois attendre quelques secondes pour que tout soit réellement terminé et accessible.
 
 
@@ -82,6 +99,13 @@ En phase de développement, tu as souvent besoin de déclencher certaines comman
 Docker Desktop permet aussi de se connecter à n'importe quel conteneur avec à un terminal embarqué dans l'interface. C'est comme ouvrir la porte du conteneur et y entrer pour travailler.  
 Pour faire cela, regarde la fenêtre de Docker Desktop à l'onglet _Containers_, tu devrais voir apparaître ton projet dans la liste des conteneurs actifs, comme dans la capture ci-dessous, avec plusieurs options dont l'accès à un terminal.
 ![Capture écran de Docker Desktop](docker-desktop.png)
+
+### Démonter les conteneurs et libérer l'espace
+Lorsque tu as terminé ton travail, tu peux supprimer tes conteneurs Docker et libérer l'espace disque associé avec la commande :
+```bash
+docker compose down
+```
+Ton travail ne sera pas perdu pour autant car tu disposes toujours des fichiers source et il est possible de remonter un environnement à tout moment avec `docker compose up -d`.
 
 # Conclusion
 Configurer un environnement avec Docker nécessite des connaissances et de l'expérience. Dans une équipe, c'est souvent le rôle d'un DevOps ou d'un développeur expérimenté.  
