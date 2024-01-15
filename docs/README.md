@@ -44,7 +44,7 @@ C'est là qu'intervient le concept de _volume_.
 
 Éteins ton conteneur qui tournait via ton terminal avec les touches `ctrl + c` et relance-le avec cette commande :
 ```bash
-docker run -v ./:/var/www/html/ -p 8000:80 my-php-ap
+docker run -v ./:/var/www/html/ -p 8000:80 my-php-app
 ```
 L'option `-v` signifie _volume_ et indique à Docker de reporter toute modification effectuée dans le dossier courant `./` vers `:` le répertoire `/var/www/html/` à l'intérieur du conteneur.
 
